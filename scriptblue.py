@@ -1,7 +1,20 @@
 from random import randint
 
-def ActRobot(robot):
-        # > defining some functions for the robots
+robo_count = 0
+robots = []
+
+def master():
+        # abcxyz
+
+        def cr_robo_sig():
+                robo_count += 1
+                if robo_count<10:
+                        signal = 'iid=0' + robo_count
+                elif robo_count>9 and robo_count<31:
+                        signal = 'iid=' + robo_count
+                
+                return signal
+
         # scanning the neighbourhood
         def scan_nbh():
                 # scan n
@@ -156,26 +169,35 @@ def ActRobot(robot):
                         if y<10:
                                 y = '0' + y                  
                         sig_sw = 'eb' + x + y
-                
-                return (sig_n + sig_ne + sig_e + sig_se + sig_s + sig_sw + sig_w + sig_nw)
-        # 
 
-        return randint(1,4)
+                return (sig_n + sig_ne + sig_e + sig_se + sig_s + sig_sw + sig_w + sig_nw)
+
+
+
+
+
+
+
+# > defining some functions for the robots
+
+
+
+def ActRobot(robot):
+        # def robo_sig():
+        #         if robot.GetCurrentBaseSignal()[0:3] == 'iid':
+        #                 initial()
+        
+        return
 
 def ActBase(base):
+        
+
         # > defining some functions for base  
         # create robots with unique IDs
-        robo_count = 0
-        def cr_robo():
-                if robo_count<10:
-                        signal = 'id=0' + robo_count
-                elif robo_count>9 and robo_count<30:
-                        signal = 'id=' + robo_count
-                base.create_robot(signal)
-
+        
         if base.GetElixir() > 500:
-                robo_count += 1
-                cr_robo()    
+                new_sig = master.cr_robo_sig()    
+                base.create_robot(new_sig)
 
         return
 
