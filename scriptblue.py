@@ -1,6 +1,6 @@
 from random import randint, choice
 base_def = 0
-robo_list = []
+line_robo_alive = [True]*13
 robo_count = 0
 
 baseX = None
@@ -13,7 +13,6 @@ lineRobotsPosAssumed = [False]*13
 # signal for the newly created robot
 def cr_robo_sig():
         global robo_count
-        global robo_list
         robo_count += 1
         signal = 'id=' + str(robo_count).zfill(2)
         # robo_list.append(robo_count)
@@ -63,29 +62,90 @@ def ActRobot(robot):
         
         line_pos = [1,4,7,10,13,16,19,22,25,28,31,34,37]
 
+        signal_3_5 = sig[3:5] #Vinu: I changed this
+
         # lineRobots
-        if int(sig[3:5]) > 0 and int(sig[3:5]) < 14:
+        if int(signal_3_5) > 0 and int(signal_3_5) < 14:
+                if "enemy" in p_list:
+                        if robot.GetVirus() > 600:
+                                robot.DeployVirus(600)
+                        elif robot.GetVirus() > 300:
+                                robot.DeployVirus(200)
+
+                if "enemy-base" in p_list:
+                        f = 0.2
+                        robot.DeployVirus(robot.GetVirus()*f)
+
+                        x, y = None, None
+                        if p_n == 'enemy-base':
+                                x = str(robotX).zfill(2)
+                                y = str(robotY-1).zfill(2)           
+                        
+                        if p_s == 'enemy-base':
+                                x = str(robotX).zfill(2)
+                                y = str(robotY+1).zfill(2)    
+
+                        if p_w == 'enemy-base':
+                                x = str(robotX-1).zfill(2)
+                                y = str(robotY).zfill(2) 
+                        
+                        if p_e == 'enemy-base':
+                                x = str(robotX+1).zfill(2)
+                                y = str(robotY).zfill(2)  
+                        
+                        if p_se == 'enemy-base':
+                                x = str(robotX+1).zfill(2)
+                                y = str(robotY+1).zfill(2)   
+                        
+                        if p_sw == 'enemy-base':
+                                x = str(robotX-1).zfill(2)
+                                y = str(robotY+1).zfill(2)   
+                        
+                        if p_ne == 'enemy-base':
+                                x = str(robotX+1).zfill(2)
+                                y = str(robotY-1).zfill(2)   
+                        
+                        if p_nw == 'enemy-base':
+                                x = str(robotX-1).zfill(2)
+                                y = str(robotY-1).zfill(2)   
+
+                        robot.setSignal('eb'+x+y)
+                        return 0
+                
+                global lineRobotsPosAssumed
+                global line_robo_alive               
 
                 for l in line_pos:
-                        if int(sig[3:5]) == (l//3)+1 :
+                        if int(signal_3_5) == (l//3)+1 :
                                 if robotY>l :
                                         return 1
                                 elif robotY<l :
                                         return 3
                                 else:
-                                        global lineRobotsPosAssumed
                                         lineRobotsPosAssumed[l//3] = True
-                                        
-                if all(lineRobotsPosAssumed):
-                        #here
-                        print('hi')
-                               
 
+                formation_assembled = True
+                for id in range(1, 14):
+                        if line_robo_alive[id-1] and not lineRobotsPosAssumed[id-1]:
+                                formation_assembled = False
+                                break      
+                print(formation_assembled)
+
+                
+                if formation_assembled :
+                        return 4
+                else:
+                        return 0        
         
         #attackers
-        if int(sig[3:5]) > 13 and int(sig[3:5]) < 22:
+        if int(signal_3_5) > 13 and int(signal_3_5) < 22:
                 if(robotX >= baseX-1):
                         return 4
+
+                if "enemy-base" in p_list:
+                        f = 0.2
+                        robot.DeployVirus(robot.GetVirus()*f)
+
                 # scan n
                 if p_n == 'enemy':
                         if(robot.GetVirus()>300):
@@ -178,10 +238,15 @@ def ActRobot(robot):
 
 
         #side_scouters
-        elif int(sig[3:5]) > 21 and int(sig[3:5]) < 27:
+        elif int(signal_3_5) > 21 and int(signal_3_5) < 27:
                 robotX, robotY = robot.GetPosition()
                 if(robotX <= baseX):
                         return 2
+
+                if "enemy-base" in p_list:
+                        f = 0.2
+                        robot.DeployVirus(robot.GetVirus()*f)
+
                 # scan n
                 if p_n == 'enemy':
                         if(robot.GetVirus()>300):
@@ -273,7 +338,7 @@ def ActRobot(robot):
                 return randint(1,4) #why do we have this still?
         
         #defenceRobots
-        elif int(sig[3:5]) > 26 and int(sig[3:5]) < 31:
+        elif int(signal_3_5) > 26 and int(signal_3_5) < 31:
                 if "enemy" in p_list:
                         if robot.GetVirus() > 800:
                                 robot.DeployVirus(600)
@@ -281,8 +346,12 @@ def ActRobot(robot):
                                 robot.DeployVirus(300)
                         elif robot.GetVirus() > 300:
                                 robot.DeployVirus(100)
+
+                if "enemy-base" in p_list:
+                        f = 0.2
+                        robot.DeployVirus(robot.GetVirus()*f)                
                                 
-                if int(sig[3:5]) == 27:  #nw
+                if int(signal_3_5) == 27:  #nw
                         robotX, robotY = robot.GetPosition()
                         posX=baseX-1
                         posY=baseY-1
@@ -290,7 +359,7 @@ def ActRobot(robot):
                                 return 4
                         if(robotY>posY): 
                                 return 1
-                elif int(sig[3:5]) == 28:  #ne
+                elif int(signal_3_5) == 28:  #ne
                         robotX, robotY = robot.GetPosition()
                         posX=baseX+1
                         posY=baseY-1
@@ -298,7 +367,7 @@ def ActRobot(robot):
                                 return 2
                         if(robotY>posY): 
                                 return 1
-                elif int(sig[3:5]) == 29:  #sw
+                elif int(signal_3_5) == 29:  #sw
                         robotX, robotY = robot.GetPosition()
                         posX=baseX-1
                         posY=baseY+1
@@ -306,7 +375,7 @@ def ActRobot(robot):
                                 return 4
                         if(robotY<posY): 
                                 return 3
-                elif int(sig[3:5]) == 30:  #se
+                elif int(signal_3_5) == 30:  #se
                         robotX, robotY = robot.GetPosition()
                         posX=baseX+1
                         posY=baseY+1
@@ -319,6 +388,7 @@ def ActRobot(robot):
                 deltaX = robotX - baseX
                 deltaY = robotY - baseY
                 delta = (deltaX, deltaY)
+
                 if delta == (0, -1):
                         return 2
                 elif delta == (1, -1):
@@ -336,14 +406,26 @@ def ActRobot(robot):
                 elif delta == (-1, -1):
                         return 2
         
+                #Vinu : smaller way and easily editable
+                # outp = {(0, -1) : 2, (1, -1) : 3, (1, 0) : 3, (1, 1) : 4, (0, 1) : 4, (-1, 1) : 1, (-1, 0) : 1, (-1, -1) : 2} 
+                # return outp[delta]
+
 
         
         return 
 
 def ActBase(base):
+        
         global baseX
         global baseY
+        global robo_list
         baseX, baseY = base.GetPosition()
+
+        los = base.GetListOfSignals()
+        for id in range(1, 14):
+                if ("id=" + str(id).zfill(2)) not in los:
+                        line_robo_alive[id-1] = False
+
         
         # > defining some functions for base  
         # create robots with unique IDs
@@ -371,10 +453,6 @@ def ActBase(base):
                 else:
                         base.DeployVirus(base.GetVirus())
                                         
-        
-        
-        
-        
         
         while base.GetElixir() > 500:
                 new_sig = cr_robo_sig()  
