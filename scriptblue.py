@@ -67,7 +67,7 @@ def ActRobot(robot):
 
         if int(signal_3_5) > 0 and int(signal_3_5) < 22:
                 base_signal = robot.GetCurrentBaseSignal()
-                if len(base_signal > 0):
+                if len(base_signal) > 0:
                         enemy_baseX = int(base_signal[2:4])
                         enemy_baseY = int(base_signal[4:])
                         diffX = abs(enemy_baseX - robotX)
@@ -81,7 +81,7 @@ def ActRobot(robot):
                                         return 2
                                 elif robotX > enemy_baseX:
                                         return 4
-                                elif robotY < enemy_baseX:
+                                elif robotY < enemy_baseY:
                                         return 3
                                 else:
                                         return 1
