@@ -18,33 +18,16 @@ def cr_robo_sig():
         # robo_list.append(robo_count)
         return signal
 
-def side_scouts():
-        pass
-
 #################################################
-
-
-
-
-# > defining some functions for the robots
-
-
-
 
 def ActRobot(robot):
         robotX, robotY = robot.GetPosition()
-        
-        
-
-
         
         # scanning the neighbourhood
         sig=robot.GetYourSignal()
         if sig == '':
                 robot.setSignal(robot.GetInitialSignal())
                 sig = robot.GetYourSignal()
-        
-        
         
         p_n = robot.investigate_up()
         p_ne = robot.investigate_ne()
@@ -64,7 +47,7 @@ def ActRobot(robot):
 
         signal_3_5 = sig[3:5] #Vinu: I changed this
 
-
+        # code for final attack when enemy base is found
         if int(signal_3_5) > 0 and int(signal_3_5) < 22:
                 base_signal = robot.GetCurrentBaseSignal()
                 if len(base_signal) > 0:
@@ -73,7 +56,7 @@ def ActRobot(robot):
                         diffX = abs(enemy_baseX - robotX)
                         diffY = abs(enemy_baseY - robotY)
                         if diffX + diffY == 1:
-                                f = 0.2
+                                f = 0.4
                                 robot.DeployVirus(robot.GetVirus()*f)
                                 return 0
                         else:
@@ -95,9 +78,10 @@ def ActRobot(robot):
                                 robot.DeployVirus(200)
 
                 if "enemy-base" in p_list:
-                        f = 0.2
+                        f = 0.4
                         robot.DeployVirus(robot.GetVirus()*f)
 
+                        # x,y below denote the coordinates of enemy base when found
                         x, y = None, None
                         if p_n == 'enemy-base':
                                 x = str(robotX).zfill(2)
@@ -151,9 +135,10 @@ def ActRobot(robot):
                         if line_robo_alive[id-1] and not lineRobotsPosAssumed[id-1]:
                                 formation_assembled = False
                                 break      
-                print(formation_assembled)
+                # print(formation_assembled)
+                # in above code, if a robot has assumed it's own position, then stay there
+                # if all robots are in formation, then ?
 
-                
                 if formation_assembled :
                         return 4
                 else:
@@ -165,7 +150,7 @@ def ActRobot(robot):
                         return 4
 
                 if "enemy-base" in p_list:
-                        f = 0.2
+                        f = 0.4
                         robot.DeployVirus(robot.GetVirus()*f)
 
                 # scan n
@@ -258,7 +243,6 @@ def ActRobot(robot):
                             
                 return randint(1,4)            
 
-
         #side_scouters
         elif int(signal_3_5) > 21 and int(signal_3_5) < 27:
                 robotX, robotY = robot.GetPosition()
@@ -266,8 +250,9 @@ def ActRobot(robot):
                         return 2
 
                 if "enemy-base" in p_list:
-                        f = 0.2
+                        f = 0.5
                         robot.DeployVirus(robot.GetVirus()*f)
+                #Abhijit: i think the above 3 lines are not necessary, maybe just for safety reasons 
 
                 # scan n
                 if p_n == 'enemy':
@@ -357,7 +342,7 @@ def ActRobot(robot):
                         robot.setSignal('eb' + x + y)
                         return 0
                         
-                return randint(1,4) #why do we have this still?
+                return randint(1,4) # why do we have this still? #Abhijit: rather, we can sweep of the back-side area systematically
         
         #defenceRobots
         elif int(signal_3_5) > 26 and int(signal_3_5) < 31:
@@ -370,9 +355,10 @@ def ActRobot(robot):
                                 robot.DeployVirus(100)
 
                 if "enemy-base" in p_list:
-                        f = 0.2
+                        f = 0.8
                         robot.DeployVirus(robot.GetVirus()*f)                
-                                
+                #Abhijit: i think the above 3 lines are not necessary, maybe just for safety reasons 
+
                 if int(signal_3_5) == 27:  #nw
                         robotX, robotY = robot.GetPosition()
                         posX=baseX-1
@@ -406,7 +392,7 @@ def ActRobot(robot):
                         if(robotY<posY): 
                                 return 3
 
-                #Rotation
+                # Rotation for the defence robots
                 deltaX = robotX - baseX
                 deltaY = robotY - baseY
                 delta = (deltaX, deltaY)
@@ -432,8 +418,6 @@ def ActRobot(robot):
                 # outp = {(0, -1) : 2, (1, -1) : 3, (1, 0) : 3, (1, 1) : 4, (0, 1) : 4, (-1, 1) : 1, (-1, 0) : 1, (-1, -1) : 2} 
                 # return outp[delta]
 
-
-        
         return 
 
 def ActBase(base):
@@ -452,10 +436,7 @@ def ActBase(base):
                 if len(l) == 6:
                         base.SetYourSignal(l)
                         break
-        
-        # > defining some functions for base  
-        # create robots with unique IDs
-        
+                
         #scan nbh
         p_n = base.investigate_up()
         p_ne = base.investigate_ne()
@@ -479,7 +460,7 @@ def ActBase(base):
                 else:
                         base.DeployVirus(base.GetVirus())
                                         
-        
+        # create robots with unique IDs
         while base.GetElixir() > 500:
                 new_sig = cr_robo_sig()  
                 base.create_robot(new_sig)
