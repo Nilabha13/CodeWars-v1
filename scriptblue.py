@@ -64,6 +64,28 @@ def ActRobot(robot):
 
         signal_3_5 = sig[3:5] #Vinu: I changed this
 
+
+        if int(signal_3_5) > 0 and int(signal_3_5) < 22:
+                base_signal = robot.GetCurrentBaseSignal()
+                if len(base_signal > 0):
+                        enemy_baseX = int(base_signal[2:4])
+                        enemy_baseY = int(base_signal[4:])
+                        diffX = abs(enemy_baseX - robotX)
+                        diffY = abs(enemy_baseY - robotY)
+                        if diffX + diffY == 1:
+                                f = 0.2
+                                robot.DeployVirus(robot.GetVirus()*f)
+                                return 0
+                        else:
+                                if robotX < enemy_baseX:
+                                        return 2
+                                elif robotX > enemy_baseX:
+                                        return 4
+                                elif robotY < enemy_baseX:
+                                        return 3
+                                else:
+                                        return 1
+
         # lineRobots
         if int(signal_3_5) > 0 and int(signal_3_5) < 14:
                 if "enemy" in p_list:
@@ -425,7 +447,11 @@ def ActBase(base):
         for id in range(1, 14):
                 if ("id=" + str(id).zfill(2)) not in los:
                         line_robo_alive[id-1] = False
-
+        
+        for l in los:
+                if len(l) == 6:
+                        base.SetYourSignal(l)
+                        break
         
         # > defining some functions for base  
         # create robots with unique IDs
