@@ -31,13 +31,16 @@ def cr_robo_sig():
 def ActRobot(robot):
         robotX, robotY = robot.GetPosition()
         X, Y = robot.GetDimensionX(), robot.GetDimensionY()
-                
-        # scanning the neighbourhood
+
+        # getting the robot signal        
         sig=robot.GetYourSignal()
         if sig == '':
                 robot.setSignal(robot.GetInitialSignal())
                 sig = robot.GetYourSignal()
+        # ofc this function is only called by'alive' robots
+        # so signal being blank can only mean a new robot popped up
         
+        # scanning the neighbourhood
         p_n = robot.investigate_up()
         p_ne = robot.investigate_ne()
         p_e = robot.investigate_right()
@@ -48,20 +51,22 @@ def ActRobot(robot):
         p_nw = robot.investigate_nw()
         p_list = [p_n, p_ne, p_e, p_se, p_s, p_sw, p_w, p_nw]
 
+        # tracking multiple enemies
         count = 0
         for l in p_list:
             if l == 'enemy':
                 count+=1
-        
         if count > 1:
-            robot.setSignal("double" + str(robotX) + str(robotY))
+            robot.setSignal("db" + str(robotX) + str(robotY)) #Abhijit : replaced double with db to avoid conflict
         else:
             robot.setSignal(robot.GetInitialSignal())    
 
-        signal_3_5 = sig[3:5] #Vinu: I changed this
 
-        # robots 17-28 will gang up on the base
-        if int(signal_3_5) > 16 and int(signal_3_5) < 29:
+        roboid = sig[3:5] #Abhijit : I changed this
+        
+
+        # robots 17-28 will gang up on the enemy base when it is found
+        if int(roboid) > 16 and int(roboid) < 29:
                 base_signal = robot.GetCurrentBaseSignal()
                 if len(base_signal) == 6:
                         enemy_baseX = int(base_signal[2:4])
@@ -80,26 +85,9 @@ def ActRobot(robot):
                                         return 3
                                 else:
                                         return 1
-                elif len(base_signal) == 10:
-                        enemy_baseX = int(base_signal[6:8])
-                        enemy_baseY = int(base_signal[8:])
-                        diffX = abs(enemy_baseX - robotX)
-                        diffY = abs(enemy_baseY - robotY)
-                        if diffX + diffY == 1:
-                                robot.DeployVirus(robot.GetVirus()*0.5)
-                                return 0
-                        else:
-                                if robotX < enemy_baseX:
-                                        return 2
-                                elif robotX > enemy_baseX:
-                                        return 4
-                                elif robotY < enemy_baseY:
-                                        return 3
-                                else:
-                                        return 1
-
+                
         #defenceRobots_1
-        elif int(signal_3_5) > 0 and int(signal_3_5) < 9:
+        elif int(roboid) > 0 and int(roboid) < 9:
                 global i
                 if "enemy" in p_list:
                         if robot.GetVirus() > 1200:
@@ -112,7 +100,7 @@ def ActRobot(robot):
                 if "enemy-base" in p_list:
                         robot.DeployVirus(robot.GetVirus())                
                 if i > 0:                
-                    if int(signal_3_5) == 1:  #nw
+                    if int(roboid) == 1:  #nw
                             robotX, robotY = robot.GetPosition()
                             posX=baseX-1
                             posY=baseY-1
@@ -122,7 +110,7 @@ def ActRobot(robot):
                             if(robotY>posY):
                                     i-=1  
                                     return 1
-                    elif int(signal_3_5) == 2:  #ne
+                    elif int(roboid) == 2:  #ne
                             robotX, robotY = robot.GetPosition()
                             posX=baseX+1
                             posY=baseY-1
@@ -132,7 +120,7 @@ def ActRobot(robot):
                             if(robotY>posY):
                                     i-=1  
                                     return 1
-                    elif int(signal_3_5) == 3:  #sw
+                    elif int(roboid) == 3:  #sw
                             robotX, robotY = robot.GetPosition()
                             posX=baseX-1
                             posY=baseY+1
@@ -142,7 +130,7 @@ def ActRobot(robot):
                             if(robotY<posY):
                                     i-=1  
                                     return 3
-                    elif int(signal_3_5) == 4:  #se
+                    elif int(roboid) == 4:  #se
                             robotX, robotY = robot.GetPosition()
                             posX=baseX+1
                             posY=baseY+1
@@ -152,7 +140,7 @@ def ActRobot(robot):
                             if(robotY<posY):
                                     i-=1  
                                     return 3
-                    elif int(signal_3_5) == 5:  #n
+                    elif int(roboid) == 5:  #n
                             robotX, robotY = robot.GetPosition()
                             posX=baseX
                             posY=baseY-1
@@ -162,7 +150,7 @@ def ActRobot(robot):
                             if(robotY>posY):
                                     i-=1  
                                     return 1
-                    elif int(signal_3_5) == 6:  #s
+                    elif int(roboid) == 6:  #s
                             robotX, robotY = robot.GetPosition()
                             posX=baseX
                             posY=baseY+1
@@ -172,7 +160,7 @@ def ActRobot(robot):
                             if(robotY>posY):
                                     i-=1  
                                     return 1
-                    elif int(signal_3_5) == 7:  #w
+                    elif int(roboid) == 7:  #w
                             robotX, robotY = robot.GetPosition()
                             posX=baseX-1
                             posY=baseY
@@ -182,7 +170,7 @@ def ActRobot(robot):
                             if(robotY<posY):
                                     i-=1  
                                     return 3
-                    elif int(signal_3_5) == 8:  #e
+                    elif int(roboid) == 8:  #e
                             robotX, robotY = robot.GetPosition()
                             posX=baseX+1
                             posY=baseY
@@ -216,7 +204,7 @@ def ActRobot(robot):
                             return 2
 
         #defenceRobots_2
-        elif int(signal_3_5) > 8 and int(signal_3_5) < 17:
+        elif int(roboid) > 8 and int(roboid) < 17:
                 global j
                 if "enemy" in p_list:
                         if robot.GetVirus() > 1200:
@@ -229,7 +217,7 @@ def ActRobot(robot):
                 if "enemy-base" in p_list:
                         robot.DeployVirus(robot.GetVirus())                
                 if j > 0:                
-                    if int(signal_3_5) == 9:  #nw
+                    if int(roboid) == 9:  #nw
                             robotX, robotY = robot.GetPosition()
                             posX=baseX-2
                             posY=baseY-2
@@ -239,7 +227,7 @@ def ActRobot(robot):
                             if(robotY>posY):
                                     i-=1  
                                     return 1
-                    elif int(signal_3_5) == 10:  #ne
+                    elif int(roboid) == 10:  #ne
                             robotX, robotY = robot.GetPosition()
                             posX=baseX+2
                             posY=baseY-2
@@ -249,7 +237,7 @@ def ActRobot(robot):
                             if(robotY>posY):
                                     i-=1  
                                     return 1
-                    elif int(signal_3_5) == 11:  #sw
+                    elif int(roboid) == 11:  #sw
                             robotX, robotY = robot.GetPosition()
                             posX=baseX-2
                             posY=baseY+2
@@ -259,7 +247,7 @@ def ActRobot(robot):
                             if(robotY<posY):
                                     i-=1  
                                     return 3
-                    elif int(signal_3_5) == 12:  #se
+                    elif int(roboid) == 12:  #se
                             robotX, robotY = robot.GetPosition()
                             posX=baseX+2
                             posY=baseY+2
@@ -269,7 +257,7 @@ def ActRobot(robot):
                             if(robotY<posY):
                                     i-=1  
                                     return 3
-                    elif int(signal_3_5) == 13:  #n
+                    elif int(roboid) == 13:  #n
                             robotX, robotY = robot.GetPosition()
                             posX=baseX
                             posY=baseY-2
@@ -279,7 +267,7 @@ def ActRobot(robot):
                             if(robotY>posY):
                                     i-=1  
                                     return 1
-                    elif int(signal_3_5) == 14:  #s
+                    elif int(roboid) == 14:  #s
                             robotX, robotY = robot.GetPosition()
                             posX=baseX
                             posY=baseY+2
@@ -289,7 +277,7 @@ def ActRobot(robot):
                             if(robotY>posY):
                                     i-=1  
                                     return 1
-                    elif int(signal_3_5) == 15:  #w
+                    elif int(roboid) == 15:  #w
                             robotX, robotY = robot.GetPosition()
                             posX=baseX-2
                             posY=baseY
@@ -299,7 +287,7 @@ def ActRobot(robot):
                             if(robotY<posY):
                                     i-=1  
                                     return 3
-                    elif int(signal_3_5) == 16:  #e
+                    elif int(roboid) == 16:  #e
                             robotX, robotY = robot.GetPosition()
                             posX=baseX+2
                             posY=baseY
@@ -325,7 +313,7 @@ def ActRobot(robot):
                             return 1                
             
         #attackers
-        if int(signal_3_5) > 16 and int(signal_3_5) < 22:
+        if int(roboid) > 16 and int(roboid) < 22:
                 global attackersPosAssumed
                 if(robotX >= baseX-1):
                         return 4
@@ -482,7 +470,7 @@ def ActRobot(robot):
 
 
         #OriginMirror
-        elif int(signal_3_5) > 21 and int(signal_3_5) < 24:
+        elif int(roboid) > 21 and int(roboid) < 24:
                 posX = X - baseX
                 posY = Y - baseY
                 global originMirrorPosAssumed
@@ -601,7 +589,7 @@ def ActRobot(robot):
                     return randint(1,4)
 
         #XMirror
-        elif int(signal_3_5) > 23 and int(signal_3_5) < 26:
+        elif int(roboid) > 23 and int(roboid) < 26:
                 posX = baseX
                 posY = Y - baseY
                 global xMirrorPosAssumed
@@ -720,7 +708,7 @@ def ActRobot(robot):
                     return randint(1,4)
 
         #YMirror
-        elif int(signal_3_5) > 25 and int(signal_3_5) < 28:
+        elif int(roboid) > 25 and int(roboid) < 28:
                 posX = X - baseX
                 posY = baseY
                 global yMirrorPosAssumed
@@ -839,7 +827,7 @@ def ActRobot(robot):
                     return randint(1,4)
         
         #scouters
-        elif int(signal_3_5) == 28:
+        elif int(roboid) == 28:
                 if(robotX <= baseX):
                         return 2
 
@@ -1055,14 +1043,14 @@ def ActRobot(robot):
                     return 0
 
             if k > 0:
-                if int(signal_3_5) == 29:
+                if int(roboid) == 29:
                     if(robotX < scout2X):
                         k-=1
                         return 2
                     else:
                         k-=1
                         return 0
-                elif int(signal_3_5) == 30:
+                elif int(roboid) == 30:
                     if(robotX < scout3X):
                         k-=1
                         return 2
@@ -1070,7 +1058,7 @@ def ActRobot(robot):
                         k-=1
                         return 0
             else:
-                if int(signal_3_5) == 29:
+                if int(roboid) == 29:
                     if robotX == scout2X:
                         return 1
                     elif robotY == 2:
@@ -1079,7 +1067,7 @@ def ActRobot(robot):
                         return 3
                     elif robotY == Y-2:
                         return 4
-                elif int(signal_3_5) == 30:
+                elif int(roboid) == 30:
                     if robotX == scout3X:
                         return 1
                     elif robotY == 4:
