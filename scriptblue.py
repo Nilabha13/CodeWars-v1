@@ -130,108 +130,111 @@ def ActRobot(robot):
                 if "enemy-base" in p_list:
                         robot.DeployVirus(robot.GetVirus())                
                 if i > 0:                
-                    if int(roboid) == 1:  #nw
-                            robotX, robotY = robot.GetPosition()
-                            posX=baseX-1
-                            posY=baseY-1
-                            if(robotX>posX):
-                                    i-=1 
-                                    return 4
-                            if(robotY>posY):
-                                    i-=1  
-                                    return 1
-                    elif int(roboid) == 2:  #ne
-                            robotX, robotY = robot.GetPosition()
-                            posX=baseX+1
-                            posY=baseY-1
-                            if(robotX<posX):
-                                    i-=1  
-                                    return 2
-                            if(robotY>posY):
-                                    i-=1  
-                                    return 1
-                    elif int(roboid) == 3:  #sw
-                            robotX, robotY = robot.GetPosition()
-                            posX=baseX-1
-                            posY=baseY+1
-                            if(robotX>posX):
-                                    i-=1  
-                                    return 4
-                            if(robotY<posY):
-                                    i-=1  
-                                    return 3
-                    elif int(roboid) == 4:  #se
-                            robotX, robotY = robot.GetPosition()
-                            posX=baseX+1
-                            posY=baseY+1
-                            if(robotX<posX):
-                                    i-=1  
-                                    return 2
-                            if(robotY<posY):
-                                    i-=1  
-                                    return 3
-                    elif int(roboid) == 5:  #n
-                            robotX, robotY = robot.GetPosition()
-                            posX=baseX
-                            posY=baseY-1
-                            if(robotX>posX):
-                                    i-=1  
-                                    return 4
-                            if(robotY>posY):
-                                    i-=1  
-                                    return 1
-                    elif int(roboid) == 6:  #s
-                            robotX, robotY = robot.GetPosition()
-                            posX=baseX
-                            posY=baseY+1
-                            if(robotX<posX):
-                                    i-=1  
-                                    return 2
-                            if(robotY>posY):
-                                    i-=1  
-                                    return 1
-                    elif int(roboid) == 7:  #w
-                            robotX, robotY = robot.GetPosition()
-                            posX=baseX-1
-                            posY=baseY
-                            if(robotX>posX):
-                                    i-=1  
-                                    return 4
-                            if(robotY<posY):
-                                    i-=1  
-                                    return 3
-                    elif int(roboid) == 8:  #e
-                            robotX, robotY = robot.GetPosition()
-                            posX=baseX+1
-                            posY=baseY
-                            if(robotX<posX):
-                                    i-=1  
-                                    return 2
-                            if(robotY<posY):
-                                    i-=1  
-                                    return 3
+                        if int(roboid) == 1:  #nw
+                                robotX, robotY = robot.GetPosition()
+                                posX=baseX-1
+                                posY=baseY-1
+                                if(robotX>posX):
+                                        i-=1 
+                                        return 4
+                                if(robotY>posY):
+                                        i-=1  
+                                        return 1
+                        elif int(roboid) == 2:  #ne
+                                robotX, robotY = robot.GetPosition()
+                                posX=baseX+1
+                                posY=baseY-1
+                                if(robotX<posX):
+                                        i-=1  
+                                        return 2
+                                if(robotY>posY):
+                                        i-=1  
+                                        return 1
+                        elif int(roboid) == 3:  #sw
+                                robotX, robotY = robot.GetPosition()
+                                posX=baseX-1
+                                posY=baseY+1
+                                if(robotX>posX):
+                                        i-=1  
+                                        return 4
+                                if(robotY<posY):
+                                        i-=1  
+                                        return 3
+                        elif int(roboid) == 4:  #se
+                                robotX, robotY = robot.GetPosition()
+                                posX=baseX+1
+                                posY=baseY+1
+                                if(robotX<posX):
+                                        i-=1  
+                                        return 2
+                                if(robotY<posY):
+                                        i-=1  
+                                        return 3
+                        elif int(roboid) == 5:  #n
+                                robotX, robotY = robot.GetPosition()
+                                posX=baseX
+                                posY=baseY-1
+                                if(robotX>posX):
+                                        i-=1  
+                                        return 4
+                                if(robotY>posY):
+                                        i-=1  
+                                        return 1
+                        elif int(roboid) == 6:  #s
+                                robotX, robotY = robot.GetPosition()
+                                posX=baseX
+                                posY=baseY+1
+                                if(robotX<posX):
+                                        i-=1  
+                                        return 2
+                                if(robotY>posY):
+                                        i-=1  
+                                        return 1
+                        elif int(roboid) == 7:  #w
+                                robotX, robotY = robot.GetPosition()
+                                posX=baseX-1
+                                posY=baseY
+                                if(robotX>posX):
+                                        i-=1  
+                                        return 4
+                                if(robotY<posY):
+                                        i-=1  
+                                        return 3
+                        elif int(roboid) == 8:  #e
+                                robotX, robotY = robot.GetPosition()
+                                posX=baseX+1
+                                posY=baseY
+                                if(robotX<posX):
+                                        i-=1  
+                                        return 2
+                                if(robotY<posY):
+                                        i-=1  
+                                        return 3
+                        i-=1
+                        return 0
+                        
                 else:
-                    #Rotation
-                    deltaX = robotX - baseX
-                    deltaY = robotY - baseY
-                    delta = (deltaX, deltaY)
+                        #Rotation
+                        deltaX = robotX - baseX
+                        deltaY = robotY - baseY
+                        delta = (deltaX, deltaY)
 
-                    if delta == (0, -1):
-                            return 2
-                    elif delta == (1, -1):
-                            return 3
-                    elif delta == (1, 0):
-                            return 3
-                    elif delta == (1, 1):
-                            return 4
-                    elif delta == (0, 1):
-                            return 4
-                    elif delta == (-1, 1):
-                            return 1
-                    elif delta == (-1, 0):
-                            return 1
-                    elif delta == (-1, -1):
-                            return 2
+                        if delta == (0, -1):
+                                return 2
+                        elif delta == (1, -1):
+                                return 3
+                        elif delta == (1, 0):
+                                return 3
+                        elif delta == (1, 1):
+                                return 4
+                        elif delta == (0, 1):
+                                return 4
+                        elif delta == (-1, 1):
+                                return 1
+                        elif delta == (-1, 0):
+                                return 1
+                        elif delta == (-1, -1):
+                                return 2
 
         #defenceRobots_2
         elif int(roboid) > 8 and int(roboid) < 17:
@@ -247,100 +250,103 @@ def ActRobot(robot):
                 if "enemy-base" in p_list:
                         robot.DeployVirus(robot.GetVirus())                
                 if j > 0:                
-                    if int(roboid) == 9:  #nw
-                            robotX, robotY = robot.GetPosition()
-                            posX=baseX-2
-                            posY=baseY-2
-                            if(robotX>posX):
-                                    i-=1 
-                                    return 4
-                            if(robotY>posY):
-                                    i-=1  
-                                    return 1
-                    elif int(roboid) == 10:  #ne
-                            robotX, robotY = robot.GetPosition()
-                            posX=baseX+2
-                            posY=baseY-2
-                            if(robotX<posX):
-                                    i-=1  
-                                    return 2
-                            if(robotY>posY):
-                                    i-=1  
-                                    return 1
-                    elif int(roboid) == 11:  #sw
-                            robotX, robotY = robot.GetPosition()
-                            posX=baseX-2
-                            posY=baseY+2
-                            if(robotX>posX):
-                                    i-=1  
-                                    return 4
-                            if(robotY<posY):
-                                    i-=1  
-                                    return 3
-                    elif int(roboid) == 12:  #se
-                            robotX, robotY = robot.GetPosition()
-                            posX=baseX+2
-                            posY=baseY+2
-                            if(robotX<posX):
-                                    i-=1  
-                                    return 2
-                            if(robotY<posY):
-                                    i-=1  
-                                    return 3
-                    elif int(roboid) == 13:  #n
-                            robotX, robotY = robot.GetPosition()
-                            posX=baseX
-                            posY=baseY-2
-                            if(robotX>posX):
-                                    i-=1  
-                                    return 4
-                            if(robotY>posY):
-                                    i-=1  
-                                    return 1
-                    elif int(roboid) == 14:  #s
-                            robotX, robotY = robot.GetPosition()
-                            posX=baseX
-                            posY=baseY+2
-                            if(robotX<posX):
-                                    i-=1  
-                                    return 2
-                            if(robotY>posY):
-                                    i-=1  
-                                    return 1
-                    elif int(roboid) == 15:  #w
-                            robotX, robotY = robot.GetPosition()
-                            posX=baseX-2
-                            posY=baseY
-                            if(robotX>posX):
-                                    i-=1  
-                                    return 4
-                            if(robotY<posY):
-                                    i-=1  
-                                    return 3
-                    elif int(roboid) == 16:  #e
-                            robotX, robotY = robot.GetPosition()
-                            posX=baseX+2
-                            posY=baseY
-                            if(robotX<posX):
-                                    i-=1  
-                                    return 2
-                            if(robotY<posY):
-                                    i-=1  
-                                    return 3
-                else:
-                    #Rotation
-                    deltaX = robotX - baseX
-                    deltaY = robotY - baseY
-                    delta = (deltaX, deltaY)
+                        if int(roboid) == 9:  #nw
+                                robotX, robotY = robot.GetPosition()
+                                posX=baseX-2
+                                posY=baseY-2
+                                if(robotX>posX):
+                                        j-=1 
+                                        return 4
+                                if(robotY>posY):
+                                        j-=1  
+                                        return 1
+                        elif int(roboid) == 10:  #ne
+                                robotX, robotY = robot.GetPosition()
+                                posX=baseX+2
+                                posY=baseY-2
+                                if(robotX<posX):
+                                        j-=1  
+                                        return 2
+                                if(robotY>posY):
+                                        j-=1  
+                                        return 1
+                        elif int(roboid) == 11:  #sw
+                                robotX, robotY = robot.GetPosition()
+                                posX=baseX-2
+                                posY=baseY+2
+                                if(robotX>posX):
+                                        j-=1  
+                                        return 4
+                                if(robotY<posY):
+                                        j-=1  
+                                        return 3
+                        elif int(roboid) == 12:  #se
+                                robotX, robotY = robot.GetPosition()
+                                posX=baseX+2
+                                posY=baseY+2
+                                if(robotX<posX):
+                                        j-=1  
+                                        return 2
+                                if(robotY<posY):
+                                        j-=1  
+                                        return 3
+                        elif int(roboid) == 13:  #n
+                                robotX, robotY = robot.GetPosition()
+                                posX=baseX
+                                posY=baseY-2
+                                if(robotX>posX):
+                                        j-=1  
+                                        return 4
+                                if(robotY>posY):
+                                        j-=1  
+                                        return 1
+                        elif int(roboid) == 14:  #s
+                                robotX, robotY = robot.GetPosition()
+                                posX=baseX
+                                posY=baseY+2
+                                if(robotX<posX):
+                                        j-=1  
+                                        return 2
+                                if(robotY>posY):
+                                        j-=1  
+                                        return 1
+                        elif int(roboid) == 15:  #w
+                                robotX, robotY = robot.GetPosition()
+                                posX=baseX-2
+                                posY=baseY
+                                if(robotX>posX):
+                                        j-=1  
+                                        return 4
+                                if(robotY<posY):
+                                        j-=1  
+                                        return 3
+                        elif int(roboid) == 16:  #e
+                                robotX, robotY = robot.GetPosition()
+                                posX=baseX+2
+                                posY=baseY
+                                if(robotX<posX):
+                                        j-=1  
+                                        return 2
+                                if(robotY<posY):
+                                        j-=1  
+                                        return 3
+                        j-=1
+                        return 0
 
-                    if delta == (2, -2) or delta == (1, -2) or delta == (0, -2) or delta == (-1, -2) :
-                            return 4
-                    elif delta == (-2, -2) or delta == (-2, -1) or delta == (-2, 0) or delta == (-2, 1) :
-                            return 3
-                    elif delta == (-2, 2) or delta == (-1, 2) or delta == (0, 2) or delta == (1, 2) :
-                            return 2
-                    elif delta == (2, 2) or delta == (2, 1) or delta == (2, 0) or delta == (2, -1) :
-                            return 1                
+                else:
+                        #Rotation
+                        deltaX = robotX - baseX
+                        deltaY = robotY - baseY
+                        delta = (deltaX, deltaY)
+
+                        if delta == (2, -2) or delta == (1, -2) or delta == (0, -2) or delta == (-1, -2) :
+                                return 4
+                        elif delta == (-2, -2) or delta == (-2, -1) or delta == (-2, 0) or delta == (-2, 1) :
+                                return 3
+                        elif delta == (-2, 2) or delta == (-1, 2) or delta == (0, 2) or delta == (1, 2) :
+                                return 2
+                        elif delta == (2, 2) or delta == (2, 1) or delta == (2, 0) or delta == (2, -1) :
+                                return 1                
             
         #attackers
         if int(roboid) > 16 and int(roboid) < 22:
@@ -1328,22 +1334,22 @@ def ActRobot(robot):
                         return 0
             else:
                 if int(roboid) == 33:
-                    if robotX == scout2X:
+                    if robotX == scout2X and not robotY == 2 :
                         return 1
-                    elif robotY == 2:
+                    elif robotY == 2 and not robotX == X-2 :
                         return 2
-                    elif robotX == X-2:
+                    elif robotX == X-2 and not robotY == Y-2 :
                         return 3
-                    elif robotY == Y-2:
+                    elif robotY == Y-2 and not robotX == scout2X :
                         return 4
                 elif int(roboid) == 34:
-                    if robotX == scout3X:
+                    if robotX == scout3X and not robotY == 4 :
                         return 1
-                    elif robotY == 4:
+                    elif robotY == 4 and not robotX == X-4 :
                         return 2
-                    elif robotX == X-4:
+                    elif robotX == X-4 and not robotY == Y-4 :
                         return 3
-                    elif robotY == Y-4:
+                    elif robotY == Y-4 and not robotX == scout3X :
                         return 4       
 
         
