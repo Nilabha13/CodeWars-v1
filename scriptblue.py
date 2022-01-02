@@ -13,6 +13,8 @@ attackersPosAssumed = False
 originMirrorPosAssumed = False
 xMirrorPosAssumed = False
 yMirrorPosAssumed = False
+diagonal1PosAssumed = False
+diagonal2PosAssumed = False
 
 lineRobotsPosAssumed = [False]*13
 
@@ -45,10 +47,7 @@ def ActRobot(robot):
         X, Y = robot.GetDimensionX(), robot.GetDimensionY()
 
         # getting the robot signal        
-        sig=robot.GetYourSignal()
-        if sig == '':
-                robot.setSignal(robot.GetInitialSignal())
-                sig = robot.GetYourSignal()
+        sig=robot.GetInitialSignal()
         # ofc this function is only called by'alive' robots
         # so signal being blank can only mean a new robot popped up
         
@@ -78,25 +77,44 @@ def ActRobot(robot):
         
 
         # robots 17-28 will gang up on the enemy base when it is found
-        if int(roboid) > 16 and int(roboid) < 29:
+        if int(roboid) > 16 and int(roboid) < 32:
                 base_signal = robot.GetCurrentBaseSignal()
-                if len(base_signal) == 6 and base_signal[:2] == 'eb':
-                        enemy_baseX = int(base_signal[2:4])
-                        enemy_baseY = int(base_signal[4:])
-                        diffX = abs(enemy_baseX - robotX)
-                        diffY = abs(enemy_baseY - robotY)
-                        if diffX + diffY == 1:
-                                robot.DeployVirus(robot.GetVirus())
-                                return 0
-                        else:
-                                if robotX < enemy_baseX:
-                                        return 2
-                                elif robotX > enemy_baseX:
-                                        return 4
-                                elif robotY < enemy_baseY:
-                                        return 3
+                if len(base_signal) == 6 :
+                        if base_signal[:2] == 'eb' :
+                                enemy_baseX = int(base_signal[2:4])
+                                enemy_baseY = int(base_signal[4:])
+                                diffX = abs(enemy_baseX - robotX)
+                                diffY = abs(enemy_baseY - robotY)
+                                if diffX + diffY == 1:
+                                        robot.DeployVirus(robot.GetVirus())
+                                        return 0
                                 else:
-                                        return 1
+                                        if robotX < enemy_baseX:
+                                                return 2
+                                        elif robotX > enemy_baseX:
+                                                return 4
+                                        elif robotY < enemy_baseY:
+                                                return 3
+                                        else:
+                                                return 1
+                        else :
+                                if int(roboid) > 16 and int(roboid) < 22 :
+                                        double_robotX = int(base_signal[2:4])
+                                        double_robotY = int(base_signal[4:])
+                                        diffX = abs(double_robotX - robotX)
+                                        diffY = abs(double_robotY - robotY)
+                                        if diffX + diffY == 1:
+                                                robot.DeployVirus(robot.GetVirus()*0.4)
+                                                return 0
+                                        else:
+                                                if robotX < double_robotX:
+                                                        return 2
+                                                elif robotX > double_robotX:
+                                                        return 4
+                                                elif robotY < double_robotY:
+                                                        return 3
+                                                else:
+                                                        return 1
                 
         #defenceRobots_1
         elif int(roboid) > 0 and int(roboid) < 9:
@@ -840,9 +858,9 @@ def ActRobot(robot):
         
         #diagonal1mirror
         elif int(roboid) > 27 and int(roboid) < 30:
-                posX = baseY
-                posY = baseX
-                global yMirrorPosAssumed
+                posY = (2*X*Y*baseX + Y*Y*baseY - X*X*baseY) // (X*X + Y*Y)
+                posX = (2*X*Y*baseY + X*X*baseX - Y*Y*baseX) // (X*X + Y*Y)
+                global diagonal1PosAssumed
                 
                 if "enemy-base" in p_list:
                         robot.DeployVirus(robot.GetVirus())
@@ -936,14 +954,14 @@ def ActRobot(robot):
                         if(robot.GetVirus()>800):
                              robot.DeployVirus(800)
                         else:
-                            robot.DeployVirus(500)
+                             robot.DeployVirus(500)
                 elif p_sw == 'enemy-base':
                         x = str(-1 + robotX).zfill(2)
                         y = str(1 + robotY).zfill(2)                 
                         robot.setSignal('eb' + x + y)
                         return 0
 
-                if not yMirrorPosAssumed:
+                if not diagonal1PosAssumed:
                     if robotX > posX:
                         return 4
                     elif robotX < posX:
@@ -953,15 +971,15 @@ def ActRobot(robot):
                     elif robotY < posY:
                         return 3
                     else:
-                        yMirrorPosAssumed = True                          
+                        diagonal1PosAssumed = True                          
                 else:            
                     return randint(1,4)
         
         #diagonal2mirror
         elif int(roboid) > 29 and int(roboid) < 32:
-                posX = X - baseX
-                posY = baseY
-                global yMirrorPosAssumed
+                posX = (baseX*X*X + 2*X*Y*Y - baseX*Y*Y - 2*baseY*X*Y) // (X*X + Y*Y)
+                posY = (baseY*Y*Y + 2*Y*X*X - baseY*X*X - 2*baseX*X*Y) // (X*X + Y*Y)
+                global diagonal2PosAssumed
                 
                 if "enemy-base" in p_list:
                         robot.DeployVirus(robot.GetVirus())
@@ -1055,14 +1073,14 @@ def ActRobot(robot):
                         if(robot.GetVirus()>800):
                              robot.DeployVirus(800)
                         else:
-                            robot.DeployVirus(500)
+                             robot.DeployVirus(500)
                 elif p_sw == 'enemy-base':
                         x = str(-1 + robotX).zfill(2)
                         y = str(1 + robotY).zfill(2)                 
                         robot.setSignal('eb' + x + y)
                         return 0
 
-                if not yMirrorPosAssumed:
+                if not diagonal2PosAssumed:
                     if robotX > posX:
                         return 4
                     elif robotX < posX:
@@ -1072,7 +1090,7 @@ def ActRobot(robot):
                     elif robotY < posY:
                         return 3
                     else:
-                        yMirrorPosAssumed = True                          
+                        diagonal2PosAssumed = True                          
                 else:            
                     return randint(1,4)
         
