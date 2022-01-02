@@ -16,6 +16,18 @@ yMirrorPosAssumed = False
 
 lineRobotsPosAssumed = [False]*13
 
+en_nw = [2,3,4,4,]
+en_n = []
+en_ne = []
+en_e = []
+en_se = []
+en_s = []
+en_sw = []
+en_w = []
+
+robo_virus_save_check = [True]*30
+robo_virus_save = []
+
 #########################################
 
 # signal for the newly created robot
@@ -68,7 +80,7 @@ def ActRobot(robot):
         # robots 17-28 will gang up on the enemy base when it is found
         if int(roboid) > 16 and int(roboid) < 29:
                 base_signal = robot.GetCurrentBaseSignal()
-                if len(base_signal) == 6:
+                if len(base_signal) == 6 and base_signal[:2] == 'eb':
                         enemy_baseX = int(base_signal[2:4])
                         enemy_baseY = int(base_signal[4:])
                         diffX = abs(enemy_baseX - robotX)
@@ -826,8 +838,247 @@ def ActRobot(robot):
                 else:            
                     return randint(1,4)
         
+        #diagonal1mirror
+        elif int(roboid) > 27 and int(roboid) < 30:
+                posX = baseY
+                posY = baseX
+                global yMirrorPosAssumed
+                
+                if "enemy-base" in p_list:
+                        robot.DeployVirus(robot.GetVirus())
+
+                # scan n
+                if p_n == 'enemy':
+                        if(robot.GetVirus()>800):
+                             robot.DeployVirus(800)
+                        else:
+                            robot.DeployVirus(500)           
+                elif p_n == 'enemy-base':
+                        x = str(robotX).zfill(2)
+                        y = str(-1 + robotY).zfill(2)
+                        robot.setSignal('eb' + x + y)
+                        return 0        
+                        
+                # scan s
+                if p_s == 'enemy':
+                        if(robot.GetVirus()>800):
+                             robot.DeployVirus(800)
+                        else:
+                            robot.DeployVirus(500) 
+                elif p_s == 'enemy-base':
+                        x = str(robotX).zfill(2)
+                        y = str(1 + robotY).zfill(2)                  
+                        robot.setSignal('eb' + x + y)
+                        return 0         
+
+                # scan e
+                if p_e == 'enemy':
+                        if(robot.GetVirus()>800):
+                             robot.DeployVirus(800)
+                        else:
+                            robot.DeployVirus(500)
+                elif p_e == 'enemy-base':
+                        x = str(1 + robotX).zfill(2)
+                        y = str(robotY).zfill(2)                
+                        robot.setSignal('eb' + x + y)
+                        return 0
+                
+                # scan w
+                if p_w == 'enemy':
+                        if(robot.GetVirus()>800):
+                             robot.DeployVirus(800)
+                        else:
+                            robot.DeployVirus(500)
+                elif p_w == 'enemy-base':
+                        x = str(-1 + robotX).zfill(2)
+                        y = str(robotY).zfill(2)                
+                        robot.setSignal('eb' + x + y)
+                        return 0
+                
+                # scan ne
+                if p_ne == 'enemy':  
+                        if(robot.GetVirus()>800):
+                             robot.DeployVirus(800)
+                        else:
+                            robot.DeployVirus(500)
+                elif p_ne == 'enemy-base':
+                        x = str(1 + robotX).zfill(2)
+                        y = str(-1 + robotY).zfill(2)                 
+                        robot.setSignal('eb' + x + y)
+                        return 0
+                
+                # scan se
+                if p_se == 'enemy':
+                        if(robot.GetVirus()>800):
+                             robot.DeployVirus(800)
+                        else:
+                            robot.DeployVirus(500)
+                elif p_se == 'enemy-base':
+                        x = str(1 + robotX).zfill(2)
+                        y = str(1 + robotY).zfill(2)                 
+                        robot.setSignal('eb' + x + y)
+                        return 0
+                
+                # scan nw
+                if p_nw == 'enemy':
+                        if(robot.GetVirus()>800):
+                             robot.DeployVirus(800)
+                        else:
+                            robot.DeployVirus(500)
+                elif p_nw == 'enemy-base':
+                        x = str(-1 + robotX).zfill(2)
+                        y = str(-1 + robotY).zfill(2)                 
+                        robot.setSignal('eb' + x + y)
+                        return 0
+                
+                # scan sw
+                if p_sw == 'enemy':
+                        if(robot.GetVirus()>800):
+                             robot.DeployVirus(800)
+                        else:
+                            robot.DeployVirus(500)
+                elif p_sw == 'enemy-base':
+                        x = str(-1 + robotX).zfill(2)
+                        y = str(1 + robotY).zfill(2)                 
+                        robot.setSignal('eb' + x + y)
+                        return 0
+
+                if not yMirrorPosAssumed:
+                    if robotX > posX:
+                        return 4
+                    elif robotX < posX:
+                        return 2
+                    elif robotY > posY:
+                        return 1
+                    elif robotY < posY:
+                        return 3
+                    else:
+                        yMirrorPosAssumed = True                          
+                else:            
+                    return randint(1,4)
+        
+        #diagonal2mirror
+        elif int(roboid) > 29 and int(roboid) < 32:
+                posX = X - baseX
+                posY = baseY
+                global yMirrorPosAssumed
+                
+                if "enemy-base" in p_list:
+                        robot.DeployVirus(robot.GetVirus())
+
+                # scan n
+                if p_n == 'enemy':
+                        if(robot.GetVirus()>800):
+                             robot.DeployVirus(800)
+                        else:
+                            robot.DeployVirus(500)           
+                elif p_n == 'enemy-base':
+                        x = str(robotX).zfill(2)
+                        y = str(-1 + robotY).zfill(2)
+                        robot.setSignal('eb' + x + y)
+                        return 0        
+                        
+                # scan s
+                if p_s == 'enemy':
+                        if(robot.GetVirus()>800):
+                             robot.DeployVirus(800)
+                        else:
+                            robot.DeployVirus(500) 
+                elif p_s == 'enemy-base':
+                        x = str(robotX).zfill(2)
+                        y = str(1 + robotY).zfill(2)                  
+                        robot.setSignal('eb' + x + y)
+                        return 0         
+
+                # scan e
+                if p_e == 'enemy':
+                        if(robot.GetVirus()>800):
+                             robot.DeployVirus(800)
+                        else:
+                            robot.DeployVirus(500)
+                elif p_e == 'enemy-base':
+                        x = str(1 + robotX).zfill(2)
+                        y = str(robotY).zfill(2)                
+                        robot.setSignal('eb' + x + y)
+                        return 0
+                
+                # scan w
+                if p_w == 'enemy':
+                        if(robot.GetVirus()>800):
+                             robot.DeployVirus(800)
+                        else:
+                            robot.DeployVirus(500)
+                elif p_w == 'enemy-base':
+                        x = str(-1 + robotX).zfill(2)
+                        y = str(robotY).zfill(2)                
+                        robot.setSignal('eb' + x + y)
+                        return 0
+                
+                # scan ne
+                if p_ne == 'enemy':  
+                        if(robot.GetVirus()>800):
+                             robot.DeployVirus(800)
+                        else:
+                            robot.DeployVirus(500)
+                elif p_ne == 'enemy-base':
+                        x = str(1 + robotX).zfill(2)
+                        y = str(-1 + robotY).zfill(2)                 
+                        robot.setSignal('eb' + x + y)
+                        return 0
+                
+                # scan se
+                if p_se == 'enemy':
+                        if(robot.GetVirus()>800):
+                             robot.DeployVirus(800)
+                        else:
+                            robot.DeployVirus(500)
+                elif p_se == 'enemy-base':
+                        x = str(1 + robotX).zfill(2)
+                        y = str(1 + robotY).zfill(2)                 
+                        robot.setSignal('eb' + x + y)
+                        return 0
+                
+                # scan nw
+                if p_nw == 'enemy':
+                        if(robot.GetVirus()>800):
+                             robot.DeployVirus(800)
+                        else:
+                            robot.DeployVirus(500)
+                elif p_nw == 'enemy-base':
+                        x = str(-1 + robotX).zfill(2)
+                        y = str(-1 + robotY).zfill(2)                 
+                        robot.setSignal('eb' + x + y)
+                        return 0
+                
+                # scan sw
+                if p_sw == 'enemy':
+                        if(robot.GetVirus()>800):
+                             robot.DeployVirus(800)
+                        else:
+                            robot.DeployVirus(500)
+                elif p_sw == 'enemy-base':
+                        x = str(-1 + robotX).zfill(2)
+                        y = str(1 + robotY).zfill(2)                 
+                        robot.setSignal('eb' + x + y)
+                        return 0
+
+                if not yMirrorPosAssumed:
+                    if robotX > posX:
+                        return 4
+                    elif robotX < posX:
+                        return 2
+                    elif robotY > posY:
+                        return 1
+                    elif robotY < posY:
+                        return 3
+                    else:
+                        yMirrorPosAssumed = True                          
+                else:            
+                    return randint(1,4)
+        
+
         #scouters
-        elif int(roboid) == 28:
+        elif int(roboid) == 32:
                 if(robotX <= baseX):
                         return 2
 
@@ -1043,14 +1294,14 @@ def ActRobot(robot):
                     return 0
 
             if k > 0:
-                if int(roboid) == 29:
+                if int(roboid) == 33:
                     if(robotX < scout2X):
                         k-=1
                         return 2
                     else:
                         k-=1
                         return 0
-                elif int(roboid) == 30:
+                elif int(roboid) == 34:
                     if(robotX < scout3X):
                         k-=1
                         return 2
@@ -1058,7 +1309,7 @@ def ActRobot(robot):
                         k-=1
                         return 0
             else:
-                if int(roboid) == 29:
+                if int(roboid) == 33:
                     if robotX == scout2X:
                         return 1
                     elif robotY == 2:
@@ -1067,7 +1318,7 @@ def ActRobot(robot):
                         return 3
                     elif robotY == Y-2:
                         return 4
-                elif int(roboid) == 30:
+                elif int(roboid) == 34:
                     if robotX == scout3X:
                         return 1
                     elif robotY == 4:
@@ -1127,7 +1378,7 @@ def ActBase(base):
                         base.DeployVirus(base.GetVirus())
                                         
         
-        while base.GetElixir() > 500:
+        while base.GetElixir() > 300:
                 new_sig = cr_robo_sig()  
                 base.create_robot(new_sig)
 
